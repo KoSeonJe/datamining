@@ -21,11 +21,12 @@ netflix_info_df = pd.DataFrame(netflix_info)
 titles = netflix_info_df['title']
 
 driver = webdriver.Chrome(service= Service(ChromeDriverManager().install()))
+driver.fullscreen_window()
 url = "https://www.imdb.com/?ref_=nv_home"
 wb = Workbook()
 ws1 = wb.active
 ws1.title = "배우,감독,제작사,넷플릭스 오리지널 여부 정보"
-col = ['actor1_awards, actor1_work_number, actor2_awards, actor2_work_number, director_awards, director_work_number, company_work_number, company_work_review_number, isNetflixOriginal']
+col = ['actor1_awards, actor1_work_number, actor2_awards, actor2_work_number,actor3_awards, actor3_work_number director_awards, director_work_number, company_work_number, company_work_review_number, isNetflixOriginal']
 ws1.append(col)
 
 isFirst = True
@@ -46,7 +47,7 @@ def getActor1Info(actor, driver) :
         if href:
             # 셀레니움으로 해당 href를 가진 a 태그 클릭하기
             actor1_element = driver.find_element(By.XPATH, f'//a[@href="{href}"]')
-            actor1_element.click()
+            actor1_element.send_keys(Keys.ENTER)
     html = driver.page_source
     soup = BeautifulSoup(html, 'lxml')
 
@@ -99,7 +100,7 @@ def getDirectorInfo(director, driver) :
         if href:
             # 셀레니움으로 해당 href를 가진 a 태그 클릭하기
             director_element = driver.find_element(By.XPATH, f'//a[@href="{href}"]')
-            director_element.click()
+            director_element.send_keys(Keys.ENTER)
     html = driver.page_source
     soup = BeautifulSoup(html, 'lxml')
     directorInfo = []
@@ -175,7 +176,7 @@ def getCompanyInfo(company, driver, index) :
                 page = driver.find_element(By.CSS_SELECTOR, 'section[data-testid = "Details"]')
                 driver.execute_script("arguments[0].scrollIntoView(true);", page)
                 time.sleep(3)
-                element.click()
+                element.send_keys(Keys.ENTER)
             except :
                 company_info.append(None)
                 company_info.append(None)
@@ -190,7 +191,7 @@ def getCompanyInfo(company, driver, index) :
     year = date.year-3
     past_year = str(year)+"-"+str(month)
     button = driver.find_element(By.CSS_SELECTOR, 'label[data-testid="accordion-item-releaseDateAccordion"]')
-    button.click()
+    button.send_keys(Keys.ENTER)
     start = driver.find_element(By.CSS_SELECTOR, 'input[data-testid="releaseYearMonth-start"]')
     end = driver.find_element(By.CSS_SELECTOR, 'input[data-testid="releaseYearMonth-end"]')
     start.send_keys(past_year)
@@ -251,13 +252,16 @@ def getIsNetflix(temps, driver) :
 
 
 def clickSource(driver, index) :
-    try:
-        search_first = driver.find_element(By.XPATH, '//*[@id="__next"]/main/div[2]/div[3]/section/div/div[1]/section[2]/div[2]/ul/li[1]/div[2]/div/a')
-        if(search_first == None) :
-            return
-        search_first.click()
-    except NoSuchElementException:
-        pass   
+    # try:
+    #     #__next > main > div.ipc-page-content-container.ipc-page-content-container--full.sc-eb36f92a-0.bFWJaa > div.ipc-page-content-container.ipc-page-content-container--center > section > div > div.ipc-page-grid__item.ipc-page-grid__item--span-2 > section:nth-child(4) > div.sc-ffc93fc1-2.ditJlF > ul > li:nth-child(1) > div.ipc-metadata-list-summary-item__c > div > a
+    #     print("실행")
+    #     if(search_first == None) :
+    #         return
+    # except NoSuchElementException:
+    #     pass  
+    search_first = driver.find_element(By.CSS_SELECTOR, '#__next > main > div.ipc-page-content-container.ipc-page-content-container--full.sc-eb36f92a-0.bFWJaa > div.ipc-page-content-container.ipc-page-content-container--center > section > div > div.ipc-page-grid__item.ipc-page-grid__item--span-2 > section:nth-child(4) > div.sc-ffc93fc1-2.ditJlF > ul > li > div.ipc-metadata-list-summary-item__c > div > a')
+    search_first.send_keys(Keys.ENTER)
+    time.sleep(1)
     html = driver.page_source
     soup = BeautifulSoup(html, 'lxml')
     list = soup.select('li[data-testid="title-pc-principal-credit"]')
@@ -272,6 +276,13 @@ def clickSource(driver, index) :
     print(actor2_info[0])
     print(actor2_info[1])
     driver.back()
+    print("actor3_info")
+    actor3_info = [None, None]
+    if(actor[2] is not None) :
+        actor3_info = getActor1Info(actor[2], driver)
+        print(actor3_info[0])
+        print(actor3_info[1])
+        driver.back()
     title_list = soup.select('li[data-testid="title-pc-principal-credit"]')
     director = getDirector(title_list)
     director_info = getDirectorInfo(director, driver)
@@ -296,6 +307,8 @@ def clickSource(driver, index) :
         'actor1_work_number' : [actor1_info[1]],
         'actor2_awards' : [actor2_info[0]],
         'actor2_work_number' : [actor2_info[1]],
+        'actor3_awards' : [actor3_info[0]],
+        'actor3_work_number' : [actor3_info[1]],
         'director_awards' : [director_info[0]],
         'director_work_number' : [director_info[1]],
         'company_work_number' : [company_info[0]],
