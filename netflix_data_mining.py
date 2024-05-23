@@ -11,7 +11,8 @@ import time
 import pandas as pd
 
 def getTitle() :
-    title = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > h1 > span')
+    title = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > h1 > span')
+    
     #__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > h1 > span
     if(title != None) :
         title = title.text
@@ -19,30 +20,36 @@ def getTitle() :
 
 def getContentType() :
     # ul.ipc-inline-listipc-inline-list--show-dividerssc-d8941411-2cdJsTzbaseAlt > 
-    temp = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > ul > li:nth-child(1)')
-    if(temp != None) :
-         temp = temp.text
-         if(temp != 'TV Series') :
-            temp = None
-    return temp
+    content_type = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > ul > li:nth-child(1)')
+    if(content_type != None) :
+        content_type = content_type.text
+        if(content_type != 'TV Series') :
+            content_type = None
+    return content_type
 
 def getRated() :
-    rated = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > ul > li:nth-child(3) > a')
-    if(rated != None) :
-        rated = rated.text
+    if(getContentType() != None) :
+        rated = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > ul > li:nth-child(3) > a')
+        if(rated != None) :
+            rated = rated.text
+    else :
+        rated = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-b7c53eda-0.dUpRPQ > ul > li:nth-child(2) > a')
+        if(rated != None) :
+            rated = rated.text
     return rated
 
 def getGenres() :
-    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > section > div:nth-child(5) > section > section > div.sc-92625f35-4.iDcoFI > div.sc-92625f35-6.gHKhNg > div.sc-92625f35-10.dwKwMe > section > div.ipc-chip-list--baseAlt.ipc-chip-list > div.ipc-chip-list__scroller > a')
+    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-4.iDcoFI > div.sc-92625f35-6.gHKhNg > div.sc-92625f35-10.dwKwMe > section > div.ipc-chip-list--baseAlt.ipc-chip-list > div.ipc-chip-list__scroller > a')
+    #__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-4.iDcoFI > div.sc-92625f35-6.gHKhNg > div.sc-92625f35-10.dwKwMe > section > div.ipc-chip-list--baseAlt.ipc-chip-list > div.ipc-chip-list__scroller > a:nth-child(1)
     if(temps != None) :
         genres = [genre.text for genre in temps]
         genre_str = ', '.join(genres)
     return genre_str
 
 def getGrade() :
-    temp = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > section > div:nth-child(5) > section > section > div.sc-92625f35-4.iDcoFI > div.sc-92625f35-6.gHKhNg > div.sc-92625f35-11.eyxQlE > div.sc-3a4309f8-0.bjXIAP.sc-b7c53eda-5.cxlubq > div > div:nth-child(1) > a > span > div > div.sc-bde20123-0.dLwiNw > div.sc-bde20123-2.cdQqzc > span.sc-bde20123-1.cMEQkK')
+    temp = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-3a4309f8-0.bjXIAP.sc-b7c53eda-1.iIQkEw > div > div:nth-child(1) > a > span > div > div.sc-bde20123-0.dLwiNw > div.sc-bde20123-2.cdQqzc > span.sc-bde20123-1.cMEQkK')
     if(temp == None) :
-        temp = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > section > div:nth-child(5) > section > section > div.sc-92625f35-4.iDcoFI > div.sc-92625f35-6.gHKhNg > div.sc-92625f35-11.eyxQlE > div.sc-3a4309f8-0.bjXIAP.sc-b7c53eda-5.cxlubq > div > div:nth-child(1) > a > span > div > div.sc-bde20123-0.dLwiNw > div.sc-bde20123-2.cdQqzc > span.sc-bde20123-1.cMEQkK')
+        temp = soup.select_one('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > section > div:nth-child(5) > section > section > div.sc-92625f35-3.frxYSZ > div.sc-3a4309f8-0.bjXIAP.sc-b7c53eda-1.iIQkEw > div > div:nth-child(1) > a > span > div > div.sc-bde20123-0.dLwiNw > div.sc-bde20123-2.cdQqzc > span.sc-bde20123-1.cMEQkK')
         if(temp == None) :
             return temp
         else :
@@ -63,24 +70,24 @@ def getActor() :
 
 def getDirector() :
     title_list = soup.select('li[data-testid="title-pc-principal-credit"]')
-
-    director_temp = []
+    directs_str = None
     if title_list :
         for direct in title_list :
             if(direct.select_one('span') is not None) :
-                if(direct.select_one('span').text == 'Director') :
-                    temp = direct.select('div.ipc-metadata-list-item__content-container a')[0].text
-                    director_temp.append(temp)
+                if(direct.select_one('span').text in 'Directors' or direct.select_one('span').text in 'Creators') :
+                    direct_temps = direct.select('div.ipc-metadata-list-item__content-container a')
+                    directs = [find_direct.text for find_direct in direct_temps]
+                    directs_str = ', '.join(directs)
             if(direct.select_one('a') is not None) :
-                if(direct.select_one('a').text == 'Creator') :
-                    temp = direct.select('div.ipc-metadata-list-item__content-container a')[0].text
-                    director_temp.append(temp)
-    if(director_temp == []) :
-        return None
-    return director_temp[0]
+                if(direct.select_one('a').text in 'Creators' or direct.select_one('a').text in 'Directors') :
+                    direct_temps = direct.select('div.ipc-metadata-list-item__content-container a')
+                    directs = [find_direct.text for find_direct in direct_temps]
+                    directs_str = ', '.join(directs)
+    return directs_str
 
 def getReleaseDate() :
-    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > div > section > div > div.sc-978e9339-1.ihWZgK.ipc-page-grid__item.ipc-page-grid__item--span-2 > section[data-testid="Details"] > div.sc-f65f65be-0.bBlII > ul > li')
+    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > div > section > div > div.sc-978e9339-1.ihWZgK.ipc-page-grid__item.ipc-page-grid__item--span-2 >section[data-testid="Details"] > div.sc-f65f65be-0.bBlII > ul > li')
+    
     aTemp = None
     spanTemp = None
     for temp in temps :
@@ -94,8 +101,8 @@ def getReleaseDate() :
             for span in spanTemp :
                 if(span.text == "Release date") :
                     return temp.select('div.ipc-metadata-list-item__content-container a')[0].text
-def getDetails(title) :
-    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > div > section > div > div.sc-978e9339-1.ihWZgK.ipc-page-grid__item.ipc-page-grid__item--span-2 > section[data-testid="Details"] > div.sc-f65f65be-0.bBlII > ul > li')
+def getDetails(title, titles) :
+    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > div > section > div > div.sc-978e9339-1.ihWZgK.ipc-page-grid__item.ipc-page-grid__item--span-2 >section[data-testid="Details"] > div.sc-f65f65be-0.bBlII > ul > li')
     aTemp = None
     spanTemp = None
     for temp in temps :
@@ -103,15 +110,15 @@ def getDetails(title) :
         spanTemp = temp.select('span')
         if(aTemp is not None) :
             for a in aTemp :
-                if(a.text == title) :
+                if(a.text == title or a.text == titles) :
                     return temp.select_one('div > ul > li > a').text
         if(spanTemp is not None) :
             for span in spanTemp :
-                if(span.text == title) :
+                if(span.text == title or span.text == titles) :
                     return temp.select_one('div > ul > li > a').text
 
 def getCompany() :
-    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-304f99f6-0.fSJiHR > div > section > div > div.sc-978e9339-1.ihWZgK.ipc-page-grid__item.ipc-page-grid__item--span-2 > section[data-testid="Details"] > div.sc-f65f65be-0.bBlII > ul > li')
+    temps = soup.select('#__next > main > div > section.ipc-page-background.ipc-page-background--base.sc-c41b9732-0.NeSef > div > section > div > div.sc-978e9339-1.ihWZgK.ipc-page-grid__item.ipc-page-grid__item--span-2 >section[data-testid="Details"] > div.sc-f65f65be-0.bBlII > ul > li')
     aTemp = None
     spanTemp = None
     companies = None
@@ -175,7 +182,7 @@ for keyword in keywords :
     except NoSuchElementException:
         pass
 
-    time.sleep(2)
+    time.sleep(1)
 
     html = driver.page_source
     soup = BeautifulSoup(html, 'lxml')
@@ -219,10 +226,10 @@ for keyword in keywords :
     release_date = getReleaseDate()
     print('출시일--', end="")
     print(release_date)
-    country = getDetails('Country of origin')
+    country = getDetails('Country of origin', 'Countries of origin')
     print('국가--', end="")
     print(country)
-    language = getDetails('Language')
+    language = getDetails('Language','Languages')
     print('언어--', end="")
     print(language)
     company = getCompany()
@@ -247,7 +254,7 @@ for keyword in keywords :
     }, columns=col)   
     row_list = row.iloc[0].tolist()
     ws1.append(row_list)
-    wb.save(filename='넷플릭스 콘텐츠 정보.xlsx')
+    wb.save(filename='넷플릭스 콘텐츠 정보_little.xlsx')
 driver.quit()
 
 # workbook = Workbook()
